@@ -2,13 +2,13 @@
    <!-- HEADER -->
    <div class="bg-green-800 text-white p-4 flex justify-between items-center">
       <div>
-         <h1 class="text-xl font-semibold">Fluxo de Caixa ⛪</h1>
+         <h1 class="text-xl font-semibold">Fluxo de Caixa {{ userName | uppercase }} </h1>
          <p class="text-sm opacity-80">Controle financeiro de entradas e saídas</p>
       </div>
       <div class="flex items-center gap-6">
          <!-- PERÍODO -->
          <div>
-            <label class="text-xs text-white opacity-80 block mb-1">Período</label>
+            <label class="text-xs text-white block mb-1">Período</label>
             <select class="text-black px-3 py-2 rounded">
                <option>Todos os meses</option>
                <option>Últimos 3 meses</option>
@@ -20,16 +20,18 @@
          <div>
             <label class="text-xs text-white block mb-1">Mês</label>
             <select class="text-black px-3 py-2 rounded">
-               <option>ago</option>
+               <option *ngFor="let m of availableMonths">
+                  {{ m }}
+               </option>
             </select>
          </div>
          <!-- ANO -->
          <div>
             <label class="text-xs text-white block mb-1">Ano</label>
-            <input class="text-black px-3 py-2 rounded w-20" value="24" />
+            <input class="text-black px-3 py-2 rounded w-20" [(ngModel)]="selectedYear" (input)="updateMonths()" />
          </div>
          <!-- LOGOUT -->
-         <button class="ml-4 text-white text-xl">Sair</button>
+         <button class="ml-4 text-white text-xl">sair</button>
       </div>
    </div>
    <div class="max-w-6xl mx-auto">
@@ -37,30 +39,35 @@
          <!-- CONTEÚDO -->
          <div class="p-6">
             <!-- CARDS -->
-            <div class="grid grid-cols-3 gap-6 mb-6">
+            <div class="grid grid-cols-3 gap-6 mb-10">
                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                  <p class="text-gray-500 text-sm">SALDO ATUAL</p>
+                  <p class="text-gray-500 text-sm mb-4">SALDO ATUAL</p>
                   <h2 class="text-2xl font-bold text-green-600">R$ 1.729,50</h2>
                </div>
                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                  <p class="text-gray-500 text-sm">ENTRADAS</p>
+                  <p class="text-gray-500 text-sm mb-4">ENTRADAS</p>
                   <h2 class="text-2xl font-bold text-green-700">R$ 2.050,00</h2>
                </div>
                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                  <p class="text-gray-500 text-sm">SAÍDAS</p>
+                  <p class="text-gray-500 text-sm mb-4">SAÍDAS</p>
                   <h2 class="text-2xl font-bold text-red-600">R$ 320,50</h2>
                </div>
             </div>
             <!-- AÇÕES -->
             <div class="flex justify-between items-center mb-4">
-               <div class="bg-gray-200 p-1 rounded-lg inline-flex gap-1">
-                  <button class="bg-white px-4 py-1 rounded-lg shadow-sm">
+               <div class="bg-gray-200 p-1 rounded-xl inline-flex gap-1">
+                  <button (click)="select('todas')" [class.bg-white]="isActive('todas')"
+                     [class.shadow-sm]="isActive('todas')" class="px-4 py-1 rounded-xl">
                      Todas
                   </button>
-                  <button class="px-4 py-1 text-gray-600">
+
+                  <button (click)="select('entradas')" [class.bg-white]="isActive('entradas')"
+                     [class.shadow-sm]="isActive('entradas')" class="px-4 py-1 rounded-xl text-gray-600">
                      Entradas
                   </button>
-                  <button class="px-4 py-1 text-gray-600">
+
+                  <button (click)="select('saidas')" [class.bg-white]="isActive('saidas')"
+                     [class.shadow-sm]="isActive('saidas')" class="px-4 py-1 rounded-xl text-gray-600">
                      Saídas
                   </button>
                </div>
@@ -68,7 +75,7 @@
                   <button class="bg-yellow-400 px-4 py-2 rounded font-semibold">
                      Exportar Excel
                   </button>
-                  <button class="bg-green-600 text-white px-4 py-2 rounded">
+                  <button (click)="openModal()" class="bg-green-600 text-white px-4 py-2 rounded">
                      + Nova Movimentação
                   </button>
                </div>
@@ -76,7 +83,7 @@
             <!-- TABELA -->
             <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
                <table class="w-full text-sm">
-                  <thead class="bg-gray-100 text-gray-600">
+                  <thead class="bg-gray-100 text-gray-500">
                      <tr>
                         <th class="p-3 text-left">DATA</th>
                         <th class="p-3 text-left">DESCRIÇÃO</th>
@@ -123,6 +130,47 @@
                </table>
             </div>
          </div>
+      </div>
+   </div>
+</div>
+
+<!-- MODAL -->
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+   <div class="bg-white rounded-xl w-full max-w-lg p-6 shadow-lg">
+
+      <!-- HEADER -->
+      <div class="flex justify-between items-center mb-4">
+         <h2 class="text-lg font-semibold">Nova Movimentação</h2>
+         <button (click)="closeModal()">✕</button>
+      </div>
+
+      <!-- TIPO -->
+      <div class="mb-4">
+         <p class="text-sm mb-2">TIPO</p>
+         <div class="flex gap-2">
+            <button class="flex-1 border rounded-lg p-2 bg-green-100">↑ Entrada</button>
+            <button class="flex-1 border rounded-lg p-2">↓ Saída</button>
+         </div>
+      </div>
+
+      <!-- INPUT -->
+      <input class="w-full border rounded-lg p-2 mb-4" placeholder="Descrição" />
+
+      <!-- VALOR + DATA -->
+      <div class="flex gap-2 mb-4">
+         <input class="flex-1 border rounded-lg p-2" placeholder="Valor" />
+         <input class="flex-1 border rounded-lg p-2" type="date" />
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="flex justify-end gap-2">
+         <button (click)="closeModal()" class="px-4 py-2 border rounded-lg">
+            Cancelar
+         </button>
+
+         <button class="px-4 py-2 bg-green-600 text-white rounded-lg">
+            Adicionar
+         </button>
       </div>
    </div>
 </div>
