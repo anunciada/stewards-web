@@ -37,9 +37,16 @@ export class CashFlowComponent {
   }
 
   updateMonths() {
-    const now = new Date();
-    const currentYear = now.getFullYear().toString().slice(-2);
-    const currentMonth = now.getMonth();
+    const currentYear = new Date().getFullYear().toString().slice(-2);
+    // limita a 2 dígitos
+    this.selectedYear = this.selectedYear.replace(/\D/g, '').slice(0, 2);
+
+    // impede ano futuro
+    if (+this.selectedYear > +currentYear) {
+      this.selectedYear = currentYear;
+    }
+
+    const currentMonth = new Date().getMonth();
 
     if (this.selectedYear === currentYear) {
       this.availableMonths = this.months.slice(0, currentMonth + 1);
@@ -57,5 +64,35 @@ export class CashFlowComponent {
 
   closeModal() {
     this.isModalOpen = false;
+  }
+
+  isCreatingCategory = false;
+
+  availableCategories = [
+    'Categoria 1',
+    'Categoria 2',
+    'Categoria 3'
+  ];
+
+  newCategory = '';
+
+  showCreateCategory() {
+    this.isCreatingCategory = true;
+  }
+
+  cancelCreateCategory() {
+    this.isCreatingCategory = false;
+    this.newCategory = '';
+  }
+
+  saveCategory() {
+    if (!this.newCategory.trim()) {
+      return;
+    }
+
+    this.availableCategories.push(this.newCategory);
+
+    this.newCategory = '';
+    this.isCreatingCategory = false;
   }
 }

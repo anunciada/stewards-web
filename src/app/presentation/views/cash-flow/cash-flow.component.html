@@ -28,7 +28,8 @@
          <!-- ANO -->
          <div>
             <label class="text-xs text-white block mb-1">Ano</label>
-            <input class="text-black px-3 py-2 rounded w-20" [(ngModel)]="selectedYear" (input)="updateMonths()" />
+            <input type="text" maxlength="2" class="text-black px-3 py-2 rounded w-20" [(ngModel)]="selectedYear"
+               (input)="updateMonths()" />
          </div>
          <!-- LOGOUT -->
          <button class="ml-4 text-white text-xl">sair</button>
@@ -146,10 +147,46 @@
 
       <!-- TIPO -->
       <div class="mb-4">
-         <p class="text-sm mb-2">TIPO</p>
+         <p class="text-sm mb-2">Tipo *</p>
          <div class="flex gap-2">
             <button class="flex-1 border rounded-lg p-2 bg-green-100">↑ Entrada</button>
             <button class="flex-1 border rounded-lg p-2">↓ Saída</button>
+         </div>
+      </div>
+
+      <!-- CATEGORIA C -->
+      <div class="mb-4">
+         <div class="flex justify-between items-center mb-2">
+            <p class="text-sm">Categoria *</p>
+
+            <button *ngIf="!isCreatingCategory" (click)="showCreateCategory()"
+               class="w-8 h-8 bg-green-600 text-white rounded flex items-center justify-center">
+               +
+            </button>
+
+            <button *ngIf="isCreatingCategory" (click)="cancelCreateCategory()"
+               class="w-8 h-8 bg-red-600 text-white rounded flex items-center justify-center">
+               ×
+            </button>
+
+         </div>
+
+         <!-- C. SELECT -->
+         <div *ngIf="!isCreatingCategory">
+            <select class="w-full text-black px-3 py-2 rounded border">
+               <option *ngFor="let c of availableCategories">
+                  {{ c }}
+               </option>
+            </select>
+         </div>
+
+         <!-- C. INPUT + SALVAR -->
+         <div *ngIf="isCreatingCategory" class="flex gap-2">
+            <input [(ngModel)]="newCategory" placeholder="Nova categoria" class="flex-1 px-3 py-2 rounded border" />
+
+            <button (click)="saveCategory()" class="px-4 py-2 bg-green-600 text-white rounded">
+               Salvar Categoria
+            </button>
          </div>
       </div>
 
@@ -158,7 +195,7 @@
 
       <!-- VALOR + DATA -->
       <div class="flex gap-2 mb-4">
-         <input class="flex-1 border rounded-lg p-2" placeholder="Valor" />
+         <input class="flex-1 border rounded-lg p-2" placeholder="Valor *" />
          <input class="flex-1 border rounded-lg p-2" type="date" />
       </div>
 
