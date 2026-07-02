@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../../infrastructure/service/category.service';
@@ -13,21 +13,16 @@ import { CreateTransactionRequest } from '../../../../infrastructure/models/crea
   styleUrl: './transaction-modal.component.css'
 })
 export class TransactionModalComponent {
+  @Output()
+  close = new EventEmitter<void>();
 
   constructor(
     private categoryService: CategoryService,
     private transactionService: TransactionService
   ) { }
 
-  // OPEN MODAL
-  isTransactionModalOpen = false;
-
-  openTransactionModal() {
-    this.isTransactionModalOpen = true;
-  }
-
   closeTransactionModal() {
-    this.isTransactionModalOpen = false;
+    this.close.emit();
   }
 
   // TYPE FILTER
@@ -84,6 +79,7 @@ export class TransactionModalComponent {
   description = '';
   value: number | null = null;
   date = '';
+  maxDate = new Date().toISOString().split('T')[0];
 
   addTransaction() {
 
@@ -101,4 +97,12 @@ export class TransactionModalComponent {
     this.closeTransactionModal();
   }
 
+  canAddTransaction(): boolean {
+    return !!(
+      this.selectedCategory &&
+      this.value &&
+      this.date &&
+      this.selectedPaymentMethod
+    );
+  }
 }

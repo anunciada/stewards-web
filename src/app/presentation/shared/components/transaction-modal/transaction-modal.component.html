@@ -63,8 +63,8 @@
   <!-- VALUE + DATE -->
   <div class="flex gap-2 mb-4">
     <input [(ngModel)]="value" type="number" step="0.01" min="0" class="flex-1 border rounded-lg p-2"
-      placeholder="Valor *" />
-    <input [(ngModel)]="date" class="flex-1 border rounded-lg p-2" type="date" />
+      placeholder="Valor R$ *" />
+    <input [(ngModel)]="date" class="flex-1 border rounded-lg p-2" type="date" [max]="maxDate" />
   </div>
 
   <!-- PAYMENT METHOD -->
@@ -105,7 +105,8 @@
       Cancelar
     </button>
 
-    <button (click)="addTransaction()" class="bg-green-700 text-white rounded-lg py-2">
+    <button (click)="addTransaction()" [disabled]="!canAddTransaction()"
+      class="bg-green-700 text-white rounded-lg py-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
       Adicionar
     </button>
   </div>
