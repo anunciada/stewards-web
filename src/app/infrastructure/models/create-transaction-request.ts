@@ -1,8 +1,8 @@
 export interface CreateTransactionRequest {
   type: 'entrada' | 'saida';
-  description: string;
   category: string;
-  value: number;
+  description: string;
+  value: number | null;
+  date: string;
   paymentMethod: string;
-  transactionDate: string;
 }

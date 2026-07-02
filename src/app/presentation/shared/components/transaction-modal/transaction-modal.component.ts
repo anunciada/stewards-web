@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../../infrastructure/service/category.service';
+import { TransactionService } from '../../../../infrastructure/service/transaction.service';
+import { CreateTransactionRequest } from '../../../../infrastructure/models/create-transaction-request';
 
 @Component({
   selector: 'app-transaction-modal',
@@ -11,6 +13,12 @@ import { CategoryService } from '../../../../infrastructure/service/category.ser
   styleUrl: './transaction-modal.component.css'
 })
 export class TransactionModalComponent {
+
+  constructor(
+    private categoryService: CategoryService,
+    private transactionService: TransactionService
+  ) { }
+
   // OPEN MODAL
   isTransactionModalOpen = false;
 
@@ -34,10 +42,6 @@ export class TransactionModalComponent {
   }
 
   // CATEGORY
-  constructor(
-    private categoryService: CategoryService
-  ) { }
-
   isCreatingCategory = false;
   availableCategories: string[] = [];
   newCategory = '';
@@ -65,4 +69,36 @@ export class TransactionModalComponent {
     this.newCategory = '';
     this.isCreatingCategory = false;
   }
+
+  // PAYMENT METHOD
+  selectedPaymentMethod: 'outro' | 'pix' | 'cartao' | 'dinheiro' = 'pix';
+
+  selectPaymentMethod(
+    method: 'outro' | 'pix' | 'cartao' | 'dinheiro'
+  ) {
+    this.selectedPaymentMethod = method;
+  }
+
+  // SAVE A NEW TRANSACION
+  selectedCategory = '';
+  description = '';
+  value: number | null = null;
+  date = '';
+
+  addTransaction() {
+
+    const payload: CreateTransactionRequest = {
+      type: this.selectedTransactionType,
+      category: this.selectedCategory,
+      description: this.description,
+      value: this.value,
+      date: this.date,
+      paymentMethod: this.selectedPaymentMethod
+    };
+
+    this.transactionService.createTransaction(payload);
+
+    this.closeTransactionModal();
+  }
+
 }

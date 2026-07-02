@@ -40,8 +40,8 @@
 
     <!-- C. SELECT -->
     <div *ngIf="!isCreatingCategory">
-      <select class="w-full text-black px-3 py-2 rounded border">
-        <option *ngFor="let c of availableCategories">
+      <select [(ngModel)]="selectedCategory" class="w-full text-black px-3 py-2 rounded border">
+        <option *ngFor="let c of availableCategories" [value]="c">
           {{ c }}
         </option>
       </select>
@@ -58,21 +58,54 @@
   </div>
 
   <!-- DESCRIPTION -->
-  <input class="w-full border rounded-lg p-2 mb-4" placeholder="Descrição" />
+  <input [(ngModel)]="description" class="w-full border rounded-lg p-2 mb-4" placeholder="Descrição" />
 
   <!-- VALUE + DATE -->
   <div class="flex gap-2 mb-4">
-    <input class="flex-1 border rounded-lg p-2" placeholder="Valor *" />
-    <input class="flex-1 border rounded-lg p-2" type="date" />
+    <input [(ngModel)]="value" type="number" step="0.01" min="0" class="flex-1 border rounded-lg p-2"
+      placeholder="Valor *" />
+    <input [(ngModel)]="date" class="flex-1 border rounded-lg p-2" type="date" />
+  </div>
+
+  <!-- PAYMENT METHOD -->
+  <div class="mb-6">
+    <p class="text-sm mb-2">Forma de Pagamento *</p>
+
+    <div class="flex gap-2">
+
+      <button (click)="selectPaymentMethod('pix')" [class.bg-blue-100]="selectedPaymentMethod === 'pix'"
+        [class.border-blue-500]="selectedPaymentMethod === 'pix'"
+        class="flex-1 border-2 rounded-lg text-xs flex items-center justify-center p-2">
+        ⚡ PIX
+      </button>
+
+      <button (click)="selectPaymentMethod('cartao')" [class.bg-blue-100]="selectedPaymentMethod === 'cartao'"
+        [class.border-blue-500]="selectedPaymentMethod === 'cartao'"
+        class="flex-1 border-2 rounded-lg text-xs flex items-center justify-center">
+        💳 Cartão
+      </button>
+
+      <button (click)="selectPaymentMethod('dinheiro')" [class.bg-blue-100]="selectedPaymentMethod === 'dinheiro'"
+        [class.border-blue-500]="selectedPaymentMethod === 'dinheiro'"
+        class="flex-1 border-2 rounded-lg text-xs flex items-center justify-center">
+        💵 Dinheiro
+      </button>
+
+      <button (click)="selectPaymentMethod('outro')" [class.bg-blue-100]="selectedPaymentMethod === 'outro'"
+        [class.border-blue-500]="selectedPaymentMethod === 'outro'"
+        class="flex-1 border-2 rounded-lg text-xs flex items-center justify-center">
+        Outro
+      </button>
+    </div>
   </div>
 
   <!-- ACTIONS -->
-  <div class="flex justify-end gap-2">
-    <button (click)="closeTransactionModal()" class="px-4 py-2 border rounded-lg">
+  <div class="grid grid-cols-2 gap-2 mt-5">
+    <button (click)="closeTransactionModal()" class="border rounded-lg py-2 h-auto">
       Cancelar
     </button>
 
-    <button class="px-4 py-2 bg-green-600 text-white rounded-lg">
+    <button (click)="addTransaction()" class="bg-green-700 text-white rounded-lg py-2">
       Adicionar
     </button>
   </div>
