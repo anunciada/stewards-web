@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction.model';
+import { CreateTransactionRequest } from '../models/create-transaction-request';
 
 @Injectable({
   providedIn: 'root'
@@ -15,4 +16,10 @@ export class TransactionService {
   getAll(): Transaction[] {
     return this.mock;
   }
+
+  createTransaction(payload: CreateTransactionRequest) {
+    console.log('Enviando para backend', payload);
+    // return this.httpClientWrapper.post(...);
+  }
+
 }
