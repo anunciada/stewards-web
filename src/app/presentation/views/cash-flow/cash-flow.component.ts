@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { TransactionModalComponent } from '../../shared/transaction-modal/transaction-modal.component';
 import { CashFlowFilterService } from '../../../infrastructure/service/cash-flow-filter.service';
 import { CashFlowFilters, CashFlowHeaderComponent } from '../../shared/cash-flow-header/cash-flow-header.component';
+import { ExcelModalComponent } from '../../shared/excel-modal/excel-modal.component';
 
 @Component({
   selector: 'app-cash-flow',
   standalone: true,
-  imports: [CommonModule, FormsModule, TransactionModalComponent, CashFlowHeaderComponent],
+  imports: [CommonModule, FormsModule, TransactionModalComponent, CashFlowHeaderComponent, ExcelModalComponent],
   templateUrl: './cash-flow.component.html',
   styleUrl: './cash-flow.component.css'
 })
@@ -112,4 +113,14 @@ export class CashFlowComponent {
 
   filteredTransactions = [...this.transactions];
 
+  // EXCEL MODAL
+  isExcelModalOpen = false;
+
+  openExcelModal() {
+    this.isExcelModalOpen = true;
+  }
+
+  closeExcelModal() {
+    this.isExcelModalOpen = false;
+  }
 }

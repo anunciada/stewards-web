@@ -1,0 +1,82 @@
+<div class="bg-white rounded-3xl w-full max-w-2xl p-8 shadow-lg">
+  <!-- HEADER -->
+  <div class="flex justify-between items-center mb-10">
+    <h2 class="text-xl font-semibold text-green-800">Planilha Excel</h2>
+    <button *ngIf="selectedTab === 'importar'" (click)="closeExcelModal()">Ver exemplo</button>
+  </div>
+
+  <!-- TABS -->
+  <div class="flex gap-2 mb-6">
+    <button (click)="selectSheetType('importar')" [class.bg-green-100]="isSheetTypeSelected('importar')"
+      [class.border-green-300]="isSheetTypeSelected('importar')" class="flex-1 border rounded-lg p-2">
+      ↑ Importar
+    </button>
+    <button (click)="selectSheetType('exportar')" [class.bg-green-100]="isSheetTypeSelected('exportar')"
+      [class.border-green-300]="isSheetTypeSelected('exportar')" class="flex-1 border rounded-lg p-2">
+      ↓ Exportar
+    </button>
+  </div>
+
+  <!-- UPLOAD AREA -->
+  <div class="border-2 border-dashed border-green-300 rounded-xl p-10 min-h-[320px]">
+    <div *ngIf="selectedTab === 'importar'" class="h-full flex flex-col items-center justify-center text-center">
+      <div class="w-16 h-16 rounded-full bg-green-100 mx-auto flex items-center justify-center mb-4">
+        <span class="text-xl text-green-600">⤴</span>
+      </div>
+      <h3 class="font-semibold text-lg mb-2">
+        Carregar Arquivo Excel
+      </h3>
+      <p class="text-gray-500 text-sm mb-6">
+        Selecione um arquivo Excel (.xlsx, .xls) com<br> os dados das movimentações.
+      </p>
+      <input #fileInput type="file" accept=".xlsx,.xls" hidden />
+      <button (click)="fileInput.click()" class="bg-green-600 text-white px-6 py-2 rounded-xl">
+        Selecionar Arquivo Excel
+      </button>
+      <p class="text-xs text-gray-400 mt-4">
+        Formatos aceitos: .xlsx, .xls
+      </p>
+    </div>
+    <!-- DOWNLOAD AREA -->
+    <div class="w-full flex flex-col items-center justify-center text-center">
+      <div *ngIf="selectedTab === 'exportar'" class="w-full">
+        <!-- GERANDO -->
+        <div *ngIf="isGeneratingFile">
+          <div class="w-16 h-16 mx-auto mb-4 border-4 border-green-600 border-t-transparent rounded-full animate-spin">
+          </div>
+          <h3 class="text-lg font-semibold">
+            Gerando planilha...
+          </h3>
+          <p class="text-gray-500 mt-2">
+            Aguarde enquanto o arquivo é preparado.
+          </p>
+        </div>
+
+        <!-- PRONTO -->
+        <div *ngIf="downloadReady">
+          <div
+            class="w-16 h-16 rounded-full bg-green-100 text-green-700 mx-auto flex items-center justify-center text-3xl mb-4">
+            ✓</div>
+          <h3 class="text-lg font-semibold">Arquivo pronto</h3>
+          <p class="text-gray-500 mt-2 mb-6">Sua planilha foi gerada com sucesso.</p>
+          <button class="bg-green-600 text-white px-6 py-2 rounded-lg">
+            Baixar agora
+          </button><br>
+          <button (click)="closeExcelModal()" class="text-gray-500 text-xs">
+            Quero mais não
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div *ngIf="selectedTab === 'importar'" class="grid grid-cols-2 gap-4 mt-8">
+    <button (click)="closeExcelModal()" class="border rounded-xl py-3">
+      Cancelar
+    </button>
+    <button class="bg-green-700 text-white rounded-xl py-3">
+      Importar
+    </button>
+  </div>
+</div>
