@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CreateCategoryRequest } from '../models/create-category-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,10 @@ export class CategoryService {
     return this.categories;
   }
 
-  createCategory(category: string): void {
-    if (!category.trim()) {
-      return;
-    }
-
-    this.categories.push(category);
+  createCategory(payload: CreateCategoryRequest): void {
+    console.log('Enviando para backend', payload);
+    // return this.httpClientWrapper.post(...);
+    this.categories.push(payload.categoryName);
   }
 }
 /*

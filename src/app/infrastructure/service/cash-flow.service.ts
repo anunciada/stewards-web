@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction.model';
-import { CreateTransactionRequest } from '../models/create-transaction-request';
+import { CreateTransactionRequest } from '../models/create-transaction-request.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TransactionService {
+export class CashFlowService {
 
   private mock: Transaction[] = [
     { id: 1, data: '2026-06-01', descricao: 'Oferta culto', tipo: 'ENTRADA', valor: 500, formaPagamento: 'PIX' },

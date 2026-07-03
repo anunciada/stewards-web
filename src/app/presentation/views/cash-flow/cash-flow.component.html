@@ -1,40 +1,6 @@
 <div class="bg-gray-100">
-   <!-- HEADER -->
-   <div class="bg-green-800 text-white p-4 flex justify-between items-center">
-      <div>
-         <h1 class="text-xl font-semibold">Fluxo de Caixa {{ userName | uppercase }} </h1>
-         <p class="text-sm opacity-80">Controle financeiro de entradas e saídas</p>
-      </div>
-      <div class="flex items-center gap-6">
-         <!-- PERÍODO -->
-         <div>
-            <label class="text-xs text-white block mb-1">Período</label>
-            <select class="text-black px-3 py-2 rounded">
-               <option>Todos os meses</option>
-               <option>Últimos 3 meses</option>
-               <option>Últimos 6 meses</option>
-               <option>Últimos 12 meses</option>
-            </select>
-         </div>
-         <!-- MÊS -->
-         <div>
-            <label class="text-xs text-white block mb-1">Mês</label>
-            <select class="text-black px-3 py-2 rounded">
-               <option *ngFor="let m of availableMonths">
-                  {{ m }}
-               </option>
-            </select>
-         </div>
-         <!-- ANO -->
-         <div>
-            <label class="text-xs text-white block mb-1">Ano</label>
-            <input type="text" maxlength="2" class="text-black px-3 py-2 rounded w-20" [(ngModel)]="selectedYear"
-               (input)="updateMonths()" />
-         </div>
-         <!-- LOGOUT -->
-         <button class="ml-4 text-white text-xl">sair</button>
-      </div>
-   </div>
+   <app-cash-flow-header [userName]="userName" (filtersChanged)="applyFilters($event)" />
+
    <div class="max-w-6xl mx-auto">
       <div class="min-h-screen">
          <!-- CONTEÚDO -->
@@ -42,16 +8,16 @@
             <!-- CARDS -->
             <div class="grid grid-cols-3 gap-6 mb-10">
                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                  <p class="text-gray-500 text-sm mb-4">SALDO ATUAL</p>
-                  <h2 class="text-2xl font-bold text-green-600">R$ 1.729,50</h2>
+                  <p class="text-gray-500 text-xs mb-4">SALDO ATUAL</p>
+                  <h2 class="text-2xl font-bold text-gray-600">{{ currentBalance | currency:'BRL' }}</h2>
                </div>
                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                  <p class="text-gray-500 text-sm mb-4">ENTRADAS</p>
-                  <h2 class="text-2xl font-bold text-green-700">R$ 2.050,00</h2>
+                  <p class="text-gray-500 text-xs mb-4">ENTRADAS</p>
+                  <h2 class="text-2xl font-bold text-green-700">{{ totalIncome | currency:'BRL' }}</h2>
                </div>
                <div class="bg-white p-5 rounded-xl shadow-sm border">
-                  <p class="text-gray-500 text-sm mb-4">SAÍDAS</p>
-                  <h2 class="text-2xl font-bold text-red-600">R$ 320,50</h2>
+                  <p class="text-gray-500 text-xs mb-4">SAÍDAS</p>
+                  <h2 class="text-2xl font-bold text-red-600">{{ totalOutcome | currency:'BRL' }}</h2>
                </div>
             </div>
             <!-- AÇÕES -->
@@ -74,7 +40,7 @@
                </div>
                <div class="flex gap-2">
                   <button class="bg-yellow-400 px-4 py-2 rounded font-semibold">
-                     Exportar Excel
+                     Importar Excel
                   </button>
                   <button (click)="openTransactionModal()" class="bg-green-600 text-white px-4 py-2 rounded">
                      + Nova Movimentação
@@ -94,39 +60,34 @@
                   </thead>
 
                   <tbody>
-                     <tr class="border-t hover:bg-gray-50">
-                        <td class="p-3">13/06/2026</td>
-                        <td class="p-3">Serviço prestado - consultoria</td>
+
+                     <tr *ngFor="let transaction of filteredTransactions" class="border-t hover:bg-gray-50">
                         <td class="p-3">
-                           <span class="bg-purple-200 text-purple-700 px-2 py-1 rounded text-xs">
-                              CARTÃO
+                           {{ transaction.date | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td class="p-3">
+                           {{ transaction.description }}
+                        </td>
+                        <td class="p-3">
+                           <span *ngIf="transaction.paymentMethod === 'cartao'"
+                              class="bg-purple-200 text-purple-700 px-2 py-1 rounded text-xs">
+                              {{ transaction.paymentMethod | uppercase }}
+                           </span>
+                           <span *ngIf="transaction.paymentMethod === 'pix'"
+                              class="bg-blue-200 text-blue-700 px-2 py-1 rounded text-xs">
+                              {{ transaction.paymentMethod | uppercase }}
+                           </span>
+                           <span *ngIf="transaction.paymentMethod === 'dinheiro'"
+                              class="bg-yellow-200 text-yellow-700 px-2 py-1 rounded text-xs">
+                              {{ transaction.paymentMethod | uppercase }}
                            </span>
                         </td>
-                        <td class="p-3 text-green-600 font-semibold">+R$ 1.200,00</td>
-                     </tr>
-
-                     <tr class="border-t hover:bg-gray-50">
-                        <td class="p-3">11/06/2026</td>
-                        <td class="p-3">Compra de materiais</td>
-                        <td class="p-3">
-                           <span class="bg-yellow-200 text-yellow-700 px-2 py-1 rounded text-xs">
-                              DINHEIRO
-                           </span>
+                        <td class="p-3 font-semibold" [class.text-green-600]="transaction.type === 'entrada'"
+                           [class.text-red-600]="transaction.type === 'saida'">
+                           {{ transaction.type === 'entrada' ? '+' : '-' }}
+                           {{ transaction.value | currency:'BRL' }}
                         </td>
-                        <td class="p-3 text-red-600 font-semibold">-R$ 320,50</td>
                      </tr>
-
-                     <tr class="border-t hover:bg-gray-50">
-                        <td class="p-3">10/06/2026</td>
-                        <td class="p-3">Venda de produto - Cliente Maria</td>
-                        <td class="p-3">
-                           <span class="bg-blue-200 text-blue-700 px-2 py-1 rounded text-xs">
-                              PIX
-                           </span>
-                        </td>
-                        <td class="p-3 text-green-600 font-semibold">+R$ 850,00</td>
-                     </tr>
-
                   </tbody>
                </table>
             </div>

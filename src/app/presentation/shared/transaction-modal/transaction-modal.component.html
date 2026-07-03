@@ -2,7 +2,7 @@
 
   <!-- HEADER -->
   <div class="flex justify-between items-center mb-4">
-    <h2 class="text-lg font-semibold">Nova Movimentação</h2>
+    <h2 class="text-lg font-semibold text-green-800">Nova Movimentação</h2>
     <button (click)="closeTransactionModal()">✕</button>
   </div>
 
@@ -10,12 +10,12 @@
   <div class="flex gap-2 mb-6">
 
     <button (click)="selectTransactionType('entrada')" [class.bg-green-100]="isTransactionTypeSelected('entrada')"
-      [class.border-green-300]="isTransactionTypeSelected('entrada')" class="flex-1 border rounded-lg p-3">
+      [class.border-green-300]="isTransactionTypeSelected('entrada')" class="flex-1 border rounded-lg p-2">
       ↑ Entrada
     </button>
 
     <button (click)="selectTransactionType('saida')" [class.bg-red-100]="isTransactionTypeSelected('saida')"
-      [class.border-red-300]="isTransactionTypeSelected('saida')" class="flex-1 border rounded-lg p-3">
+      [class.border-red-300]="isTransactionTypeSelected('saida')" class="flex-1 border rounded-lg p-2">
       ↓ Saída
     </button>
 
@@ -47,11 +47,11 @@
       </select>
     </div>
 
-    <!-- C. INPUT + SAVE -->
-    <div *ngIf="isCreatingCategory" class="flex gap-2">
-      <input [(ngModel)]="newCategory" placeholder="Nova categoria" class="flex-1 px-3 py-2 rounded border" />
+    <!-- C. INPUT AND SAVE -->
+    <div *ngIf="isCreatingCategory" class="flex gap-1">
+      <input [(ngModel)]="newCategory" placeholder="Nova categoria" class="flex-1 px-3 py-2 rounded-lg border" />
 
-      <button (click)="saveCategory()" class="px-4 py-2 bg-green-600 text-white rounded">
+      <button (click)="saveCategory()" class="px-4 py-2 bg-green-600 text-white rounded-lg">
         Salvar
       </button>
     </div>
@@ -60,7 +60,7 @@
   <!-- DESCRIPTION -->
   <input [(ngModel)]="description" class="w-full border rounded-lg p-2 mb-4" placeholder="Descrição" />
 
-  <!-- VALUE + DATE -->
+  <!-- VALUE AND DATE -->
   <div class="flex gap-2 mb-4">
     <input [(ngModel)]="value" type="number" step="0.01" min="0" class="flex-1 border rounded-lg p-2"
       placeholder="Valor R$ *" />

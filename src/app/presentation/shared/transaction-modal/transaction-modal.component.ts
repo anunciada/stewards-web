@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategoryService } from '../../../../infrastructure/service/category.service';
-import { TransactionService } from '../../../../infrastructure/service/transaction.service';
-import { CreateTransactionRequest } from '../../../../infrastructure/models/create-transaction-request';
+import { CategoryService } from '../../../infrastructure/service/category.service';
+import { CashFlowService } from '../../../infrastructure/service/cash-flow.service';
+import { CreateTransactionRequest } from '../../../infrastructure/models/create-transaction-request.model';
+import { CreateCategoryRequest } from '../../../infrastructure/models/create-category-request.model';
 
 @Component({
   selector: 'app-transaction-modal',
@@ -18,7 +19,7 @@ export class TransactionModalComponent {
 
   constructor(
     private categoryService: CategoryService,
-    private transactionService: TransactionService
+    private cashFlowService: CashFlowService
   ) { }
 
   closeTransactionModal() {
@@ -56,7 +57,11 @@ export class TransactionModalComponent {
   }
 
   saveCategory() {
-    this.categoryService.createCategory(this.newCategory);
+    const payload: CreateCategoryRequest = {
+      categoryName: this.newCategory
+    };
+
+    this.categoryService.createCategory(payload);
 
     this.availableCategories =
       this.categoryService.getAllCategories();
@@ -92,7 +97,7 @@ export class TransactionModalComponent {
       paymentMethod: this.selectedPaymentMethod
     };
 
-    this.transactionService.createTransaction(payload);
+    this.cashFlowService.createTransaction(payload);
 
     this.closeTransactionModal();
   }

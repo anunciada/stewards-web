@@ -1,0 +1,39 @@
+<!-- HEADER -->
+<div class="bg-green-800 text-white p-4 flex justify-between items-center">
+  <div>
+    <h1 class="text-xl font-semibold">Fluxo de Caixa {{ userName | uppercase }} </h1>
+    <p class="text-sm opacity-80">Controle financeiro de entradas e saídas</p>
+  </div>
+  <div class="flex items-center gap-6">
+    <!-- PERÍODO -->
+    <div>
+      <label class="text-xs text-white block mb-1">Período</label>
+      <select [(ngModel)]="selectedPeriod" (change)="applyFilters()" class="text-black px-3 py-2 rounded">
+        <option value="all">Todos os meses</option>
+        <option value="3">Últimos 3 meses</option>
+        <option value="6">Últimos 6 meses</option>
+        <option value="12">Últimos 12 meses</option>
+      </select>
+    </div>
+    <!-- MÊS -->
+    <div>
+      <label class="text-xs text-white block mb-1">Mês</label>
+      <select [(ngModel)]="selectedMonth" (change)="applyFilters()" class="text-black px-3 py-2 rounded">
+
+        <option value="">Todos</option>
+
+        <option *ngFor="let m of availableMonths; let i = index" [value]="i"> {{ m }}
+        </option>
+
+      </select>
+    </div>
+    <!-- ANO -->
+    <div>
+      <label class="text-xs text-white block mb-1">Ano</label>
+      <input type="text" maxlength="2" class="text-black px-3 py-2 rounded w-20" [(ngModel)]="selectedYear"
+        (input)="updateMonths(); applyFilters()" />
+    </div>
+    <!-- LOGOUT -->
+    <button class="ml-4 text-white text-xl">sair</button>
+  </div>
+</div>
