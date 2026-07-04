@@ -6,52 +6,58 @@
          <!-- CONTEÚDO -->
          <div class="p-6">
             <!-- CARDS -->
-            <div class="grid grid-cols-3 gap-6 mb-10">
-               <div class="bg-white p-5 rounded-xl shadow-sm border">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+               <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border min-h-[80px] md:min-h-[120px]">
                   <p class="text-gray-500 text-xs mb-4">SALDO ATUAL</p>
-                  <h2 class="text-2xl font-bold text-gray-600">{{ currentBalance | currency:'BRL' }}</h2>
+                  <h2 class="text-xl md:text-2xl font-bold text-gray-600">
+                     {{ currentBalance | currency:'BRL' }}
+                  </h2>
                </div>
-               <div class="bg-white p-5 rounded-xl shadow-sm border">
+               <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border min-h-[80px] md:min-h-[120px]">
                   <p class="text-gray-500 text-xs mb-4">ENTRADAS</p>
-                  <h2 class="text-2xl font-bold text-green-700">{{ totalIncome | currency:'BRL' }}</h2>
+                  <h2 class="text-2xl font-bold text-green-700">
+                     {{ totalIncome | currency:'BRL' }}
+                  </h2>
                </div>
-               <div class="bg-white p-5 rounded-xl shadow-sm border">
+
+               <div class="bg-white p-4 md:p-5 rounded-xl shadow-sm border min-h-[80px] md:min-h-[120px]">
                   <p class="text-gray-500 text-xs mb-4">SAÍDAS</p>
-                  <h2 class="text-2xl font-bold text-red-600">{{ totalOutcome | currency:'BRL' }}</h2>
+                  <h2 class="text-2xl font-bold text-red-600">
+                     {{ totalOutcome | currency:'BRL' }}
+                  </h2>
                </div>
             </div>
             <!-- AÇÕES -->
-            <div class="flex justify-between items-center mb-4">
-               <div class="bg-gray-200 p-1 rounded-xl inline-flex gap-1">
+            <div class="flex flex-col md:flex-row gap-4 md:justify-between md:items-center mb-4">
+               <div class="bg-gray-200 p-1 rounded-xl inline-flex self-start gap-1">
                   <button (click)="select('todas')" [class.bg-white]="isActive('todas')"
                      [class.shadow-sm]="isActive('todas')" class="px-4 py-1 rounded-xl">
                      Todas
                   </button>
-
                   <button (click)="select('entradas')" [class.bg-white]="isActive('entradas')"
                      [class.shadow-sm]="isActive('entradas')" class="px-4 py-1 rounded-xl text-gray-600">
                      Entradas
                   </button>
-
                   <button (click)="select('saidas')" [class.bg-white]="isActive('saidas')"
                      [class.shadow-sm]="isActive('saidas')" class="px-4 py-1 rounded-xl text-gray-600">
                      Saídas
                   </button>
                </div>
-               <div class="flex gap-2">
+               <div class="flex flex-col md:flex-row gap-2">
                   <button (click)="openExcelModal()"
                      class="bg-green-600 text-white px-4 py-2 rounded font-semibold text-sm">
                      Excel
                   </button>
                   <button (click)="openTransactionModal()"
-                     class="bg-yellow-400  px-4 py-2 rounded font-semibold text-sm">
+                     class="bg-yellow-400 px-4 py-2 rounded font-semibold text-sm">
                      + Nova Movimentação
                   </button>
                </div>
             </div>
+
             <!-- TABELA -->
-            <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-               <table class="w-full text-xs">
+            <div class="bg-white rounded-xl shadow-sm border overflow-x-auto">
+               <table class="w-full min-w-[700px] text-xs">
                   <thead class="bg-gray-100 text-gray-500">
                      <tr>
                         <th class="p-3 text-left">DATA</th>
