@@ -58,16 +58,24 @@ export class TransactionModalComponent {
 
   saveCategory() {
     const payload: CreateCategoryRequest = {
-      categoryName: this.newCategory
+      name: this.newCategory,
+      groupId: "84c40045-fa0a-4f2c-a8be-511586051dce" // groupId da UMP
     };
 
-    this.categoryService.createCategory(payload);
+    this.categoryService.createCategory(payload)
+      .subscribe({
+        next: () => {
 
-    this.availableCategories =
-      this.categoryService.getAllCategories();
+          this.availableCategories.push(this.newCategory);
 
-    this.newCategory = '';
-    this.isCreatingCategory = false;
+          this.newCategory = '';
+          this.isCreatingCategory = false;
+
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
   }
 
   // PAYMENT METHOD

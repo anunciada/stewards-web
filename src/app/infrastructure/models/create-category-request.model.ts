@@ -1,3 +1,4 @@
 export interface CreateCategoryRequest {
-  categoryName: string;
+  name: string;
+  groupId: string;
 }
