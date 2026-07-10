@@ -39,12 +39,12 @@ export class TransactionModalComponent {
 
   // CATEGORY
   isCreatingCategory = false;
+  categories: any[] = [];
   availableCategories: string[] = [];
   newCategory = '';
 
   ngOnInit() {
-    this.availableCategories =
-      this.categoryService.getAllCategories();
+    this.getCategory();
   }
 
   showCreateCategory() {
@@ -56,6 +56,14 @@ export class TransactionModalComponent {
     this.newCategory = '';
   }
 
+  getCategory() {
+    this.categoryService.getAllCategories()
+      .subscribe(data => {
+        this.categories = data;
+        this.availableCategories = data.map(item => item.name);
+      });
+  }
+
   saveCategory() {
     const payload: CreateCategoryRequest = {
       name: this.newCategory,
@@ -65,7 +73,6 @@ export class TransactionModalComponent {
     this.categoryService.createCategory(payload)
       .subscribe({
         next: () => {
-
           this.availableCategories.push(this.newCategory);
 
           this.newCategory = '';

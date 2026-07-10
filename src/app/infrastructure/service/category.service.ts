@@ -18,12 +18,11 @@ export class CategoryService {
 
   constructor(private http: HttpClient) { }
 
-  getAllCategories(): string[] {
-    return this.categories;
+  getAllCategories(): Observable<any[]> {
+    return this.http.get<any[]>(this.URL);
   }
 
   createCategory(payload: CreateCategoryRequest): Observable<void> {
-    //console.log('Enviando para backend', payload);
     this.categories.push(payload.name);
     return this.http.post<void>(
       this.URL,
@@ -31,12 +30,3 @@ export class CategoryService {
     );
   }
 }
-/*
-getAllCategories() {
-  return this.httpClientWrapper.get(...);
-}
-
-createCategory(category: string) {
-  return this.httpClientWrapper.post(...);
-}
-*/
