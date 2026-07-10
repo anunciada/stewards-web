@@ -40,11 +40,9 @@
 
     <!-- C. SELECT -->
     <div *ngIf="!isCreatingCategory">
-      <select [(ngModel)]="selectedCategory" class="w-full text-black px-3 py-2 rounded border">
-        <option *ngFor="let c of availableCategories" [value]="c">
-          {{ c }}
-        </option>
-      </select>
+      <app-category-dropdown [categories]="categories" [selectedCategory]="selectedCategory"
+        (selectCategory)="selectCategory($event)" (editCategory)="editCategory($event)">
+      </app-category-dropdown>
     </div>
 
     <!-- C. INPUT AND SAVE -->
@@ -52,7 +50,7 @@
       <input [(ngModel)]="newCategory" placeholder="Nova categoria" class="flex-1 px-3 py-2 rounded-lg border" />
 
       <button (click)="saveCategory()" class="px-4 py-2 bg-green-600 text-white rounded-lg">
-        Salvar
+        {{ editingCategoryId ? 'Atualizar' : 'Salvar' }}
       </button>
     </div>
   </div>

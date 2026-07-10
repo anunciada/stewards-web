@@ -5,17 +5,22 @@ import { CategoryService } from '../../../infrastructure/service/category.servic
 import { CashFlowService } from '../../../infrastructure/service/cash-flow.service';
 import { CreateTransactionRequest } from '../../../infrastructure/models/create-transaction-request.model';
 import { CategoryRequest } from '../../../infrastructure/models/category-request.model';
+import { CategoryDropdownComponent } from '../category-dropdown/category-dropdown.component';
 
 @Component({
   selector: 'app-transaction-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CategoryDropdownComponent],
   templateUrl: './transaction-modal.component.html',
   styleUrl: './transaction-modal.component.css'
 })
 export class TransactionModalComponent {
   @Output()
   close = new EventEmitter<void>();
+
+  ngOnInit() {
+    this.getCategory(this.group.id);
+  }
 
   constructor(
     private categoryService: CategoryService,
@@ -45,12 +50,7 @@ export class TransactionModalComponent {
   // CATEGORY
   isCreatingCategory = false;
   categories: any[] = [];
-  availableCategories: string[] = [];
   newCategory = '';
-
-  ngOnInit() {
-    this.getCategory(this.group.id);
-  }
 
   showCreateCategory() {
     this.isCreatingCategory = true;
@@ -59,13 +59,13 @@ export class TransactionModalComponent {
   cancelCreateCategory() {
     this.isCreatingCategory = false;
     this.newCategory = '';
+    this.editingCategoryId = null;
   }
 
   getCategory(groupId: string) {
     this.categoryService.getAllCategories(groupId)
       .subscribe(data => {
         this.categories = data;
-        this.availableCategories = data.map(item => item.name);
       });
   }
 
@@ -75,19 +75,60 @@ export class TransactionModalComponent {
       groupId: this.group.id
     };
 
-    this.categoryService.createCategory(payload)
+    if (this.editingCategoryId) {
+      this.updateCategory(payload);
+      return;
+    }
+
+    this.categoryService
+      .createCategory(payload)
       .subscribe({
         next: () => {
-          this.availableCategories.push(this.newCategory);
-
-          this.newCategory = '';
-          this.isCreatingCategory = false;
-
+          this.getCategory(this.group.id);
+          this.resetCategoryForm();
         },
-        error: (error) => {
-          console.error(error);
-        }
+        error: error => console.error(error)
       });
+  }
+
+  updateCategory(payload: CategoryRequest) {
+    if (!this.editingCategoryId) {
+      return;
+    }
+
+    this.categoryService
+      .updateCategory(this.editingCategoryId, payload)
+      .subscribe({
+        next: () => {
+          const category = this.categories.find(
+            c => c.id === this.editingCategoryId
+          );
+
+          if (category) {
+            category.name = this.newCategory;
+          }
+          this.resetCategoryForm();
+        },
+        error: error => console.error(error)
+      });
+  }
+
+  editingCategoryId: string | null = null;
+
+  editCategory(category: any) {
+    this.editingCategoryId = category.id;
+    this.newCategory = category.name;
+    this.isCreatingCategory = true;
+  }
+
+  selectCategory(category: any) {
+    this.selectedCategory = category.name;
+  }
+
+  resetCategoryForm() {
+    this.newCategory = '';
+    this.isCreatingCategory = false;
+    this.editingCategoryId = null;
   }
 
   // PAYMENT METHOD
@@ -130,4 +171,5 @@ export class TransactionModalComponent {
       this.selectedPaymentMethod
     );
   }
+
 }

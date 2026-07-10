@@ -31,4 +31,8 @@ export class CategoryService {
       payload
     );
   }
+
+  updateCategory(id: string, payload: CategoryRequest) {
+    return this.http.put(`${this.URL}/${id}`, payload);
+  }
 }

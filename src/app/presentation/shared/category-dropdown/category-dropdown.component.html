@@ -1,0 +1,40 @@
+<div class="relative">
+
+  <button type="button" (click)="toggle()"
+    class="w-full text-left px-3 py-2 rounded border bg-white flex justify-between items-center">
+
+    <span>
+      {{ selectedCategory || 'Selecione uma categoria' }}
+    </span>
+
+    <span>▼</span>
+
+  </button>
+
+  <div *ngIf="isOpen" class="absolute z-50 mt-1 w-full bg-white border rounded shadow-lg">
+
+    <div *ngFor="let category of categories" class="flex items-center justify-between px-4 py-2 hover:bg-gray-100">
+
+      <span class="cursor-pointer flex-1" (click)="select(category)">
+
+        {{ category.name }}
+
+      </span>
+
+      <div class="flex gap-2">
+
+        <button type="button" (click)="editCategory.emit(category)" class="text-blue-600 hover:text-blue-800">
+          ✏️
+        </button>
+
+        <button type="button" (click)="deleteCategory.emit(category)" class="text-red-600 hover:text-red-800">
+          🗑️
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
