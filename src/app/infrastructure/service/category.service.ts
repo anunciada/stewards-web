@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateCategoryRequest } from '../models/create-category-request.model';
+import { CategoryRequest } from '../models/category-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +18,13 @@ export class CategoryService {
 
   constructor(private http: HttpClient) { }
 
-  getAllCategories(): string[] {
-    return this.categories;
+  getAllCategories(groupId: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.URL}/${groupId}`
+    );
   }
 
-  createCategory(payload: CreateCategoryRequest): Observable<void> {
-    //console.log('Enviando para backend', payload);
+  createCategory(payload: CategoryRequest): Observable<void> {
     this.categories.push(payload.name);
     return this.http.post<void>(
       this.URL,
@@ -31,12 +32,3 @@ export class CategoryService {
     );
   }
 }
-/*
-getAllCategories() {
-  return this.httpClientWrapper.get(...);
-}
-
-createCategory(category: string) {
-  return this.httpClientWrapper.post(...);
-}
-*/

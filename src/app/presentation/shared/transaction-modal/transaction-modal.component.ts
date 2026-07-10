@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../infrastructure/service/category.service';
 import { CashFlowService } from '../../../infrastructure/service/cash-flow.service';
 import { CreateTransactionRequest } from '../../../infrastructure/models/create-transaction-request.model';
-import { CreateCategoryRequest } from '../../../infrastructure/models/create-category-request.model';
+import { CategoryRequest } from '../../../infrastructure/models/category-request.model';
 
 @Component({
   selector: 'app-transaction-modal',
@@ -26,6 +26,11 @@ export class TransactionModalComponent {
     this.close.emit();
   }
 
+  group: any = {
+    name: "UMP",
+    id: "84c40045-fa0a-4f2c-a8be-511586051dce"
+  };
+
   // TYPE FILTER
   selectedTransactionType: 'entrada' | 'saida' = 'entrada';
 
@@ -39,12 +44,12 @@ export class TransactionModalComponent {
 
   // CATEGORY
   isCreatingCategory = false;
+  categories: any[] = [];
   availableCategories: string[] = [];
   newCategory = '';
 
   ngOnInit() {
-    this.availableCategories =
-      this.categoryService.getAllCategories();
+    this.getCategory(this.group.id);
   }
 
   showCreateCategory() {
@@ -56,16 +61,23 @@ export class TransactionModalComponent {
     this.newCategory = '';
   }
 
+  getCategory(groupId: string) {
+    this.categoryService.getAllCategories(groupId)
+      .subscribe(data => {
+        this.categories = data;
+        this.availableCategories = data.map(item => item.name);
+      });
+  }
+
   saveCategory() {
-    const payload: CreateCategoryRequest = {
+    const payload: CategoryRequest = {
       name: this.newCategory,
-      groupId: "84c40045-fa0a-4f2c-a8be-511586051dce" // groupId da UMP
+      groupId: this.group.id
     };
 
     this.categoryService.createCategory(payload)
       .subscribe({
         next: () => {
-
           this.availableCategories.push(this.newCategory);
 
           this.newCategory = '';
