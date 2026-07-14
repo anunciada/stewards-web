@@ -18,7 +18,6 @@
       [class.border-red-300]="isTransactionTypeSelected('saida')" class="flex-1 border rounded-lg p-2">
       ↓ Saída
     </button>
-
   </div>
 
   <!-- CATEGORY -->
@@ -35,12 +34,11 @@
         class="w-5 h-5 bg-red-600 text-white rounded flex items-center justify-center">
         ×
       </button>
-
     </div>
 
     <!-- C. SELECT -->
     <div *ngIf="!isCreatingCategory">
-      <app-category-dropdown [categories]="categories" [selectedCategory]="selectedCategory"
+      <app-category-dropdown [categories]="categories" [selectedCategory]="selectedCategoryName"
         (selectCategory)="selectCategory($event)" (editCategory)="editCategory($event)">
       </app-category-dropdown>
     </div>
@@ -70,7 +68,6 @@
     <p class="text-sm mb-2">Forma de Pagamento *</p>
 
     <div class="flex gap-2">
-
       <button (click)="selectPaymentMethod('pix')" [class.bg-blue-100]="selectedPaymentMethod === 'pix'"
         [class.border-blue-500]="selectedPaymentMethod === 'pix'"
         class="flex-1 border-2 rounded-lg text-xs flex items-center justify-center p-2">

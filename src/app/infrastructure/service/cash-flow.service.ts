@@ -1,11 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction.model';
 import { CreateTransactionRequest } from '../models/create-transaction-request.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CashFlowService {
+
+  private readonly URL = 'http://localhost:8081/transaction';
 
   private mock: Transaction[] = [
     { id: 1, data: '2026-06-01', descricao: 'Oferta culto', tipo: 'ENTRADA', valor: 500, formaPagamento: 'PIX' },
@@ -13,13 +17,19 @@ export class CashFlowService {
     { id: 3, data: '2026-06-03', descricao: 'Dízimo', tipo: 'ENTRADA', valor: 1550, formaPagamento: 'CARTAO' }
   ];
 
+  constructor(private http: HttpClient) { }
+
   getAll(): Transaction[] {
     return this.mock;
   }
 
-  createTransaction(payload: CreateTransactionRequest) {
+  createTransaction(payload: CreateTransactionRequest): Observable<void> {
     console.log('Enviando para backend', payload);
-    // return this.httpClientWrapper.post(...);
+    return this.http.post<void>(
+      this.URL,
+      payload
+    );
   }
+
 
 }

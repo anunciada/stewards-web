@@ -122,7 +122,8 @@ export class TransactionModalComponent {
   }
 
   selectCategory(category: any) {
-    this.selectedCategory = category.name;
+    this.selectedCategoryId = category.id;
+    this.selectedCategoryName = category.name;
   }
 
   resetCategoryForm() {
@@ -134,38 +135,35 @@ export class TransactionModalComponent {
   // PAYMENT METHOD
   selectedPaymentMethod: 'outro' | 'pix' | 'cartao' | 'dinheiro' = 'pix';
 
-  selectPaymentMethod(
-    method: 'outro' | 'pix' | 'cartao' | 'dinheiro'
-  ) {
+  selectPaymentMethod(method: 'outro' | 'pix' | 'cartao' | 'dinheiro') {
     this.selectedPaymentMethod = method;
   }
 
   // SAVE A NEW TRANSACION
-  selectedCategory = '';
+  selectedCategoryId = '';
+  selectedCategoryName = '';
   description = '';
   value: number | null = null;
   date = '';
   maxDate = new Date().toISOString().split('T')[0];
 
   addTransaction() {
-
     const payload: CreateTransactionRequest = {
-      type: this.selectedTransactionType,
-      category: this.selectedCategory,
+      groupId: this.group.id,
+      categoryId: this.selectedCategoryId,
       description: this.description,
+      type: this.selectedTransactionType,
+      paymentMethod: this.selectedPaymentMethod,
       value: this.value,
-      date: this.date,
-      paymentMethod: this.selectedPaymentMethod
+      transactionDate: this.date
     };
-
     this.cashFlowService.createTransaction(payload);
-
-    this.closeTransactionModal();
+    //this.closeTransactionModal();
   }
 
   canAddTransaction(): boolean {
     return !!(
-      this.selectedCategory &&
+      this.selectedCategoryId &&
       this.value &&
       this.date &&
       this.selectedPaymentMethod
