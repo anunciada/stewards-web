@@ -8,7 +8,7 @@ import { CategoryRequest } from '../models/category-request.model';
 })
 export class CategoryService {
 
-  private readonly URL = 'http://localhost:8081/categories';
+  private readonly URL = 'http://localhost:8080/categories';
 
   private categories: string[] = [
     'Dízimo',

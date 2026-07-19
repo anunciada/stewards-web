@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TransactionModalComponent } from '../../shared/transaction-modal/transaction-modal.component';
 import { CashFlowFilterService } from '../../../infrastructure/service/cash-flow-filter.service';
+import { CashFlowService } from '../../../infrastructure/service/cash-flow.service';
 import { CashFlowFilters, CashFlowHeaderComponent } from '../../shared/cash-flow-header/cash-flow-header.component';
 import { ExcelModalComponent } from '../../shared/excel-modal/excel-modal.component';
 
@@ -24,7 +25,17 @@ export class CashFlowComponent {
 
   constructor(
     private cashFlowFilterService: CashFlowFilterService,
+    private cashFlowService: CashFlowService
   ) { }
+
+  group: any = {
+    name: "UMP",
+    id: "84c40045-fa0a-4f2c-a8be-511586051dce"
+  };
+
+  ngOnInit() {
+    this.getTransactions(this.group.id);
+  }
 
   // DYNAMIC FILTER
   selectedFilter: 'todas' | 'entradas' | 'saidas' = 'todas';
@@ -94,24 +105,16 @@ export class CashFlowComponent {
       this.totalIncome - this.totalOutcome;
   }
 
-  transactions = [
-    {
-      date: '2026-06-13',
-      description: 'Serviço prestado - consultoria',
-      paymentMethod: 'cartao',
-      type: 'entrada',
-      value: 1200
-    },
-    {
-      date: '2026-01-11',
-      description: 'Compra de materiais',
-      paymentMethod: 'dinheiro',
-      type: 'saida',
-      value: 320.50
-    }
-  ];
+  transactions: any[] = [];
+  filteredTransactions: any[] = [];
 
-  filteredTransactions = [...this.transactions];
+  getTransactions(groupId: string): void {
+    this.cashFlowService.getAllTransactions(groupId)
+      .subscribe(data => {
+        this.transactions = data;
+        this.filteredTransactions = [...data];
+      });
+  }
 
   // EXCEL MODAL
   isExcelModalOpen = false;

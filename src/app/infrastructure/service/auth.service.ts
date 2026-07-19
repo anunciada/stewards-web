@@ -16,7 +16,7 @@ export interface LoginResponse {
 })
 export class AuthService {
 
-  private readonly apiUrl = 'http://localhost:8081/auth';
+  private readonly URL = 'http://localhost:8080/auth';
 
   constructor(
     private http: HttpClient
@@ -29,7 +29,7 @@ export class AuthService {
     };
 
     return this.http.post<LoginResponse>(
-      `${this.apiUrl}/login`,
+      `${this.URL}/login`,
       payload
     );
 

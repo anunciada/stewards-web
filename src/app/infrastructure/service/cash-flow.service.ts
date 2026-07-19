@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class CashFlowService {
 
-  private readonly URL = 'http://localhost:8081/transaction';
+  private readonly URL = 'http://localhost:8080/transaction';
 
   private mock: Transaction[] = [
     { id: 1, data: '2026-06-01', descricao: 'Oferta culto', tipo: 'ENTRADA', valor: 500, formaPagamento: 'PIX' },
@@ -24,12 +24,15 @@ export class CashFlowService {
   }
 
   createTransaction(payload: CreateTransactionRequest): Observable<void> {
-    console.log('Enviando para backend', payload);
     return this.http.post<void>(
       this.URL,
       payload
     );
   }
 
-
+  getAllTransactions(groupId: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.URL}/${groupId}`
+    );
+  }
 }

@@ -157,8 +157,17 @@ export class TransactionModalComponent {
       value: this.value,
       transactionDate: this.date
     };
-    this.cashFlowService.createTransaction(payload);
-    //this.closeTransactionModal();
+
+    this.cashFlowService
+      .createTransaction(payload)
+      .subscribe({
+        next: () => {
+          this.closeTransactionModal();
+        },
+        error: (err) => {
+          console.error('Erro ao criar transação', err);
+        }
+      });
   }
 
   canAddTransaction(): boolean {
